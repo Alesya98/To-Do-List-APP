@@ -2,7 +2,7 @@ import { useContext, useState, memo } from "react";
 import { DeleteTaskContext } from "./DeleteTaskContext";
 
 const Task = ({ task }) => {
-  console.log("rerender Task");
+  console.log("rerender Task", task.title);
   const context = useContext(DeleteTaskContext);
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState(task.title);
@@ -57,4 +57,3 @@ const Task = ({ task }) => {
 };
 
 export default memo(Task);
-// export default Task;

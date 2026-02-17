@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import "./App.css";
 import Header from "./Header";
 import InputTask from "./InputTask";
@@ -8,45 +8,35 @@ import ButtonComp from "./ButtonComp";
 import DeleteActiveTask from "./DeleteActiveTask";
 
 function App() {
-  const [tasks, setTask] = useState([
-    {
-      id: 1,
-      title: "Купить курс",
-      isDone: false,
-    },
-  ]);
-
-  // useEffect(() => {
-  //   localStorage.setItem("tasks", JSON.stringify(tasks));
-  // }, [tasks]);
+  const [tasks, setTask] = useState(() => {
+    return JSON.parse(localStorage.getItem("tasks")) || [];
+  });
 
   useEffect(() => {
-    const tasks =  JSON.parse(localStorage.getItem('tasks'))
-    setTask(tasks)
-   }, []);
-
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const [filter, setFilter] = useState("all");
 
-  const deleteTask = (id) => {
+  const deleteTask = useCallback((id) => {
     setTask((tasks) => tasks.filter((item) => item.id !== id));
-  };
+  }, []);
 
-  const checkedTask = (id) => {
+  const checkedTask = useCallback((id) => {
     setTask((tasks) =>
       tasks.map((item) =>
         item.id === id ? { ...item, isDone: !item.isDone } : item,
       ),
     );
-  };
+  }, []);
 
-  const editTitle = (id, newTitle) => {
+  const editTitle = useCallback((id, newTitle) => {
     setTask((tasks) =>
       tasks.map((item) =>
         item.id === id ? { ...item, title: newTitle } : item,
       ),
     );
-  };
+  }, []);
 
   const filteredTask = tasks.filter((item) => {
     if (filter === "active") return !item.isDone;
@@ -54,17 +44,21 @@ function App() {
     return true;
   });
 
-  const taskLength = filteredTask.filter((item) => !item.isDone);
+  const taskLength = useMemo(() => filteredTask.filter((item) => !item.isDone).length, [filteredTask]);
 
-  const clearActive = () => {
+  const clearActive = useCallback(() => {
     setTask((tasks) => tasks.filter((item) => !item.isDone));
-  };
+  }, []);
+
+  const valueContext = useMemo(() => {
+    return {deleteTask, checkedTask, editTitle}
+  }, [deleteTask, checkedTask, editTitle])
 
   return (
     <>
       <Header />
       <InputTask setTask={setTask} />
-      <DeleteTaskContext value={{ deleteTask, checkedTask, editTitle }}>
+      <DeleteTaskContext value={valueContext}>
         <ToDoList tasks={filteredTask} />
       </DeleteTaskContext>
       <ButtonComp setFilter={setFilter} />

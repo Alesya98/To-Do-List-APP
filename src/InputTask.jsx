@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 
 const InputTask = ({ setTask }) => {
   console.log("rerender InputTask");
@@ -40,4 +40,4 @@ const InputTask = ({ setTask }) => {
   );
 };
 
-export default InputTask;
+export default memo(InputTask);
