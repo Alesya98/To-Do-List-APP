@@ -124,12 +124,12 @@ const ToDo = () => {
   }, [filter, tasks]);
 
   const taskLength = useMemo(
-    () => filteredTask.filter((item) => !item.isDone).length,
+    () => filteredTask.filter((item) => !item.isCompleted).length,
     [filteredTask],
   );
 
   const clearActive = useCallback(() => {
-    setTask((tasks) => tasks.filter((item) => !item.isDone));
+    setTask((tasks) => tasks.filter((item) => !item.isCompleted));
   }, []);
 
   const valueContext = useMemo(() => {
