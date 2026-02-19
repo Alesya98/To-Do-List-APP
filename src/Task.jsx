@@ -29,7 +29,7 @@ const Task = ({ task }) => {
         onChange={() => context.checkedTask(task.id, task.isCompleted)}
       />
       {!isEdit ? (
-        <p className={task.isDone ? "check" : ""}>{task.title}</p>
+        <p className={task.isCompleted ? "check" : ""}>{task.title}</p>
       ) : (
         <input
           value={editText}
