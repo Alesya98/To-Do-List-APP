@@ -117,8 +117,8 @@ const ToDo = () => {
   const filteredTask = useMemo(() => {
     console.log(tasks);
     return tasks.filter((item) => {
-      if (filter === "active") return !item.isDone;
-      if (filter === "done") return item.isDone;
+      if (filter === "active") return !item.isCompleted;
+      if (filter === "done") return item.isCompleted;
       return true;
     });
   }, [filter, tasks]);
